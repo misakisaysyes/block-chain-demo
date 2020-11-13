@@ -1,38 +1,72 @@
-.App {
-  text-align: center;
+.app {
+  width: 80%;
+  margin: 128px auto;
+  display: flex;
+  justify-content: space-between;
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+  font-family: monospace;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.account-wrapper {
+  line-height: 24px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.account-row {
+  width: 456px;
+  margin: 12px 0;
+  padding: 0 8px;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 4px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.minter {
+  color: white;
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+.to {
+  padding: 0 6px;
+  border: 1px rgba(0, 0, 0, 0.65) solid; 
+}
+
+.op-wrapper {
+  width: 94%;
+  margin-left: 6%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  justify-content: space-around;
+}
+
+.op-block {
+  width: 456px;
+  height: 65%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.op-header {
+  font-size: 16px;
+}
+
+.btn {
+  height: 24px;
+  width: 64px;
+  background-color: white;
+  border: 1px rgba(0, 0, 0, 0.65) solid;
+  color: rgba(0, 0, 0, 0.65);
+  border-radius: 2px;
+  margin-right: 12px;
+  line-height: 24px;
+  text-align: center;
+  display: inline-block;
+}
+
+.btn-active {
+  background-color:  rgba(0, 0, 0, 0.65);
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
