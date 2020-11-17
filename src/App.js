@@ -9,11 +9,8 @@ const contractHandler = new web3.eth.Contract(Abi, ContractAddr)
 
 const App = () => {
   const [minter, setMinter] = useState('')
+  const [ opType, setOpType ] = useState('mint')
   const [selectedAccount, setSelectedAccount] = useState('')
-  const [op, setOp] = useState({
-    opType: 'mint',
-    field: 'to',
-  })
 
   useEffect(() => {
     // 查询minter
@@ -26,13 +23,14 @@ const App = () => {
    return (
     <div className='app'> 
       <Accounts 
+        opType={opType}
         minter={minter} 
-        selectAccount={item => setSelectedAccount(item)} 
+        selectAccount={item => setSelectedAccount(`${item}-${(new Date()).toString()}`)} 
       />
-      <Operations  
-        op={op} 
+      <Operations
+        opType={opType}
+        setOpType={item => setOpType(item)}  
         minter={minter}
-        setOp={item => setOp(c => ({ ...c, ...item}))}
         selectedAccount={selectedAccount}
       />
     </div>
@@ -40,7 +38,7 @@ const App = () => {
 }
 
 const Accounts = props => {
-  const { minter, selectAccount } = props
+  const { minter, selectAccount, opType } = props
   const [accountList, setAccountList] = useState([])
   const [balances, setBalances] = useState([])
   const [cur, setCur] = useState(0)
@@ -71,6 +69,12 @@ const Accounts = props => {
     })
   },[accountList])
 
+  useEffect(() => {
+    let index = accountList.indexOf(minter)
+    index < 0 && (index = 0)
+    setCur(index)
+  }, [opType])
+
   return (
     <div className='account-wrapper'>
       {
@@ -90,21 +94,21 @@ const Accounts = props => {
 }
 
 const Operations = props => {
-  const { op, setOp, selectedAccount, minter } = props
-  const { opType, field } = op
+  const { selectedAccount, minter, opType, setOpType } = props
+  const [field, setField] = useState('to')
   const [accounts, setAccounts] = useState({
-    from: '',
+    from: minter,
     to: '',
   })
 
   useEffect(() => {
-    opType === 'mint' && accounts.from !== minter && setAccounts(c => ({...c, from: minter}))
-    const obj = field === 'from' ? { from: selectedAccount } : { to: selectedAccount }
+    const account = (selectedAccount && selectedAccount.split('')) ? selectedAccount.split('-')[0] : minter
+    const obj = field === 'from' ? opType !== 'mint' && { from: account } : { to: account }
     setAccounts(c => ({...c, ...obj}))
   }, [selectedAccount])
  
   const eventProxy = e => {
-    e.target && e.target.id && setOp({ field: e.target.id })
+    e.target && e.target.id && e.target.id !== 'submit' && !(opType === 'mint' && e.target.id === 'from') && setField(e.target.id)
     if(e.target.id === 'submit') {
       switch(opType) {
         case 'mint':
@@ -134,8 +138,8 @@ const Operations = props => {
 
   const toggleOp = op => {
     const resetAccounts = op === 'mint' ? { from: minter, to: '' } : { from: '', to: '' }
-    const resetField = op === 'mint' ? { opType:op, field: 'to' } : { opType: op, field: 'from'}
-    setOp(resetField)
+    setOpType(op)
+    setField(op === 'mint' ? 'to' : 'from')
     setAccounts(resetAccounts)
   }
 
@@ -143,14 +147,14 @@ const Operations = props => {
     <div className='op-wrapper'>
       <div className='op-block' onClick={ e => eventProxy(e)}>
         <div className='op-header'>
-          <div > {op.opType === 'mint' ? 
+          <div > {opType === 'mint' ? 
             (<span onClick={() => toggleOp('send')}><BankOutlined />  发币</span>) : 
             (<span onClick={() => toggleOp('mint')}><SwapOutlined />  转帐</span>)}
           </div> 
         </div>
         <div>
           <div id='from' className={`btn ${field === 'from' && 'btn-active'}`} >from</div>
-          {accounts.from}
+          {accounts.from ? accounts.from : minter}
         </div>
         <div>
           <div id='to' className={`btn ${field === 'to' && 'btn-active'}`} >to</div>
