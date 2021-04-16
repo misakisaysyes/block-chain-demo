@@ -13,7 +13,6 @@ const App = () => {
   const [selectedAccount, setSelectedAccount] = useState('')
 
   useEffect(() => {
-    // 查询minter
     contractHandler.methods.minter().call({}, (err, res) => {
       err && console.log(`failed to get minter:${err}`)
       res && setMinter(res) 

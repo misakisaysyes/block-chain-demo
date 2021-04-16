@@ -1,7 +1,9 @@
 // ganache-cli启用到地址
 export const Url = 'http://localhost:8545'
+
 // 合约部署后的地址
 export const ContractAddr = '0xB7ceb50d076f53c9049150FE1034Cda05006DFA6'
+
 // 合约部署后的abi
 export const Abi = [
 	{
